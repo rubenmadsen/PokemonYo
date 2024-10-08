@@ -1,0 +1,6 @@
+PokemonYo:
+  outputs:
+    dev:
+      type: duckdb
+      path: storage/database.db
+  target: dev
