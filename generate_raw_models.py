@@ -32,7 +32,7 @@ if __name__ == "__main__":
     data = res.json()
     for endpoint in data.keys():
         generate_raw_models(endpoint)
-    shutil.copy('storage/database.db', 'storage/database_reading.db')
+
 
 
 

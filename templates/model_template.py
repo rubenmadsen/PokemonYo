@@ -1,8 +1,7 @@
 from pandas import DataFrame
 import requests
 import pool
-import time
-import pandas as pd
+import shutil
 limit = 1000
 
 
@@ -22,5 +21,6 @@ def model(dbt, sesssion):
     urls = [obj['url'] for obj in results]
     json_obj = pool.fetch_data_from_endpoints(urls)
     df = DataFrame(json_obj)
+    #shutil.copy('storage/database.db', 'storage/database_reading.db')
     return df
 
