@@ -2,3 +2,4 @@ dbt-duckdb
 requests
 pandas
 plotly
+duckdb
