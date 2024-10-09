@@ -6,6 +6,8 @@ Bash
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
+sudo chmod +x install.sh
+sudo chmod +x update.sh
 ./install.sh
 ```
 Edit crontab and add this line using ```crontab -e``` and add this line:
