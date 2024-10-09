@@ -1,5 +1,9 @@
 from pandas import DataFrame
 import requests
+import sys
+import os
+pool_path = os.path.abspath(os.path.join(__file__, "../../../templates"))
+sys.path.insert(0, pool_path)
 import pool
 import shutil
 limit = 1000
