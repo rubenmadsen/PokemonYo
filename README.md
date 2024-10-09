@@ -15,7 +15,7 @@ Edit crontab and add this line using ```crontab -e``` and add this line:
 
 ## Graphs
 ```bash
-python3 visualizer.py
+.venv/bin/python3 visualizer.py
 ```
 
 
