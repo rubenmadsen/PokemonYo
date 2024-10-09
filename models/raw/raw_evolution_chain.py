@@ -1,44 +1,56 @@
 from pandas import DataFrame
 import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 import time
 import pandas as pd
+limit = 1000
+poolsize = 30
+def fetch_data_from_endpoints(endpoints, max_workers=poolsize):
+    responses = []
 
-def model(dbt, session):
-    endpoint = "evolution-chain"  # Replace with the actual endpoint or parameterize it
-    base_url = f"https://pokeapi.co/api/v2/{endpoint}"
-    next_url = base_url
-    all_results = []
+    def fetch(url):
+        try:
+            response = requests.get(url)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            return response.json()  # Or use response.text for raw content
+        except requests.exceptions.RequestException as e:
+            print(f"Error fetching {url}: {e}")
+            return None
+
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Submit all tasks to the thread pool
+        future_to_url = {executor.submit(fetch, url): url for url in endpoints}
+
+        # Process as tasks complete
+        for future in as_completed(future_to_url):
+            url = future_to_url[future]
+            data = future.result()
+            if data is not None:
+                data["url"] = url
+                responses.append(data)
+                # Optional: Print progress or handle data
+                # print(f"Fetched data from {url}")
+            else:
+                print(f"Failed to fetch data from {url}")
+
+    return responses
+
+
+def model(dbt, sesssion):
+    next_url = f"https://pokeapi.co/api/v2/evolution-chain/?{limit}=60&offset=0"
+    results = []
 
     while next_url is not None:
         response = requests.get(next_url)
         data = response.json()
-        next_url = data.get("next")
-        results = data.get("results", [])
-
-        # Fetch detailed data for each item
-        for item in results:
-            item_url = item['url']
-            item_response = requests.get(item_url)
-            item_data = item_response.json()
-            all_results.append(item_data)
-            time.sleep(0.1)  # Short delay to respect API rate limits
-
-        time.sleep(0.5)  # Delay between pages to be polite to the API
-
-    # Flatten the nested JSON data
-    df = pd.json_normalize(all_results, sep='_')
+        next_url = data["next"]
+        results.extend(data["results"])
+    # json_obj = []
+    # for f in results:
+    #     json_obj.append(requests.get(f["url"]).json())
+    urls = [obj['url'] for obj in results]
+    json_obj = fetch_data_from_endpoints(urls)
+    df = DataFrame(json_obj)
     return df
-
-
-# def model(dbt, sesssion):
-#     next_url = "https://pokeapi.co/api/v2/evolution-chain"
-#     results = []
-#
-#     while next_url is not None:
-#         response = requests.get(next_url)
-#         data = response.json()
-#         next_url = data["next"]
-#         results.extend(data["results"])
-#     df = DataFrame(results)
-#     return df
 

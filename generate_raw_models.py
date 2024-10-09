@@ -1,29 +1,31 @@
 import requests
+
 import duckdb
 import pandas as pd
 
-total = 12716
 api_url = "https://pokeapi.co/api/v2/"
 
 
-def total_amount():
-    total = 0
-    for endpoint in requests.get("https://pokeapi.co/api/v2").json().keys():
-        count = requests.get(f"{api_url}{endpoint}/").json()['count']
-        total += count
-        print(f"Processing {endpoint}:{count}")
-    print(f"Total: {total}")
-
 def generate_raw_models(endpoint):
     content = ""
-    with open("model_template.py", "r") as rf:
+    with open("templates/model_template.py", "r") as rf:
         content = rf.read()
         content = content.replace("ENDPOINT", endpoint)
     out_name = f"models/raw/raw_{endpoint}.py".replace("-", "_")
     with open(out_name, "w") as wf:
         wf.write(content)
         print(f"Wrote {out_name}")
+    generate_staging_models(endpoint)
 
+def generate_staging_models(endpoint):
+    stg_out_name = f"models/staging/stg_{endpoint}.sql".replace("-", "_")
+    content = ""
+    with open("templates/staging_template.sql", "r") as rf:
+        content = rf.read()
+        content = content.replace("RAW_TABLE", f"raw_{endpoint}".replace("-","_"))
+    with open(stg_out_name, "w") as wf:
+        wf.write(content)
+        print(f"Wrote {stg_out_name}")
 
 if __name__ == "__main__":
     #total_amount()
