@@ -1,10 +1,23 @@
 Welcome to your new dbt project!
 
 ### Using the starter project
+## Installation
+Bash
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+./install.sh
+```
+Edit crontab and add this line using ```crontab -e``` and add this line:
+```crontab
+0 0 * * * ./script.sh
+```
 
-Try running the following commands:
-- dbt run
-- dbt test
+## Graphs
+```bash
+python3 visualizer.py
+```
+
 
 
 ### Resources:
