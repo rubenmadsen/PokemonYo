@@ -39,7 +39,7 @@ fig.add_trace(
     row=3, col=1
 )
 
-fig.update_layout(height=800, width=1200, title_text="Pokémon Visualizations")
+fig.update_layout(height=1000, width=1200, title_text="Pokémon Visualizations")
 
 fig.show()
 
