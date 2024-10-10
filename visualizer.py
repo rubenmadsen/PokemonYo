@@ -28,16 +28,31 @@ fig.add_trace(
     row=1, col=1
 )
 
+# weight speed
 fig.add_trace(
     Bar(x=weight_speed_ratio_df['name'], y=weight_speed_ratio_df['weight_speed_ratio'], name='Weight/Speed Ratio'),
     row=2, col=1
 )
+# fig.add_trace(
+#     Bar(x=weight_speed_ratio_df['name'], y=weight_speed_ratio_df['weight'], name='Weight'),
+#     row=2, col=1
+# )
 
+# attack defense
 fig.add_trace(
     Bar(x=attack_defense_ratio_df['name'], y=attack_defense_ratio_df['attack_defense_ratio'],
         name='Attack/Defense Ratio'),
     row=3, col=1
 )
+
+fig.update_xaxes(range=[0, 30], row=1, col=1)  # Adjust the range as needed
+fig.update_yaxes(range=[0, pokemon_stats_df['hp'].max()], row=1, col=1)
+
+fig.update_xaxes(range=[0, 30], row=2, col=1)
+fig.update_yaxes(range=[0, weight_speed_ratio_df['weight_speed_ratio'].max()/20], row=2, col=1)
+
+fig.update_xaxes(range=[0, 30], row=3, col=1)
+fig.update_yaxes(range=[0, attack_defense_ratio_df['attack_defense_ratio'].max()/2], row=3, col=1)
 
 fig.update_layout(height=1000, width=1200, title_text="Pokémon Visualizations")
 
